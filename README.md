@@ -1,6 +1,6 @@
 ### minifs
 
-This is an educational project for the OS-II class on State University Of São Paulo.
+This is an educational project for the OS-II class on Sao Paulo State University - UNESP.
 
 #### Requirements
 
@@ -30,3 +30,7 @@ This is an educational project for the OS-II class on State University Of São P
 [ ] `help` command to show the available commands
 
 [ ] `exit` command to exit the program
+
+#### Authors
+ * Dalton Lima @daltonbr
+ * Lucas Pinheiros @lucaspin
