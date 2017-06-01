@@ -20,7 +20,7 @@ int main() {
   do {
     do {
       action = get_action_from_user();
-    } while (action != NULL);
+    } while (action == NULL);
 
     switch (action->cmd) {
       case MKDIR:
@@ -52,15 +52,14 @@ int main() {
         // TODO
         break;
       case HELP:
-        fprintf(stdout, "%s\n", HELP_COMMAND);
-        // TODO
+        show_help();
         break;
       case EXIT:
         fprintf(stdout, "%s\n", EXIT_COMMAND);
+        fprintf(stdout, "%s\n", "Bye!\n");
         break;
     }
   } while (action->cmd != EXIT);
 
-  fprintf(stdout, "%s\n", "Bye!\n");
   return 0;
 }

@@ -15,9 +15,11 @@
 #define DIRTREE_COMMAND "dirtree"
 #define HELP_COMMAND "help"
 #define EXIT_COMMAND "exit"
+#define COMMAND_DELIMITER " "
 
 // TODO: need to calculate this properly
 #define MAX_COMMAND_LENGTH 100
+#define MAX_PATH_LENGTH 72
 
 /////////////////////////////////////////////////////////////////////////////
 // Structures
@@ -37,7 +39,7 @@ typedef enum {
 
 typedef struct action_t {
     command_type cmd;
-    char* path;
+    char path[MAX_PATH_LENGTH];
     int file_size;
 } action_t;
 
@@ -72,3 +74,8 @@ action_t* parse_action(char* action);
  * @return  TRUE if valid command, FALSE otherwise.
  */
 int check_command(char* command, action_t* action);
+
+int get_filesize();
+char* get_filename();
+int check_no_more_arguments();
+void show_help();
