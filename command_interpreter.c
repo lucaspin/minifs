@@ -1,3 +1,13 @@
+/**
+ * MINIFS - Mini File System
+ *
+ * This is an educational project for the OS-II class on Sao Paulo State University - UNESP.
+ * Authors: Dalton Lima @daltonbr
+ *          Lucas Pinheiros @lucaspin
+ * https://github.com/lucaspin/minifs
+ * command_interpreter.c
+ */
+
 #include "command_interpreter.h"
 #include "filesystem.h"
 

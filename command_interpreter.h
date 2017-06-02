@@ -1,3 +1,16 @@
+/**
+ * MINIFS - Mini File System
+ *
+ * This is an educational project for the OS-II class on Sao Paulo State University - UNESP.
+ * Authors: Dalton Lima @daltonbr
+ *          Lucas Pinheiros @lucaspin
+ * https://github.com/lucaspin/minifs
+ * command_interpreter.h
+ */
+
+#ifndef COMMAND_INTERPRETER_H
+#define COMMAND_INTERPRETER_H
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -26,21 +39,21 @@
 /////////////////////////////////////////////////////////////////////////////
 
 typedef enum {
-    MKDIR,
-    MKFILE,
-    RMDIR,
-    LISTDIR,
-    SHOWSEC,
-    MAPSEC,
-    DIRTREE,
-    HELP,
-    EXIT
+  MKDIR,
+  MKFILE,
+  RMDIR,
+  LISTDIR,
+  SHOWSEC,
+  MAPSEC,
+  DIRTREE,
+  HELP,
+  EXIT
 } command_type;
 
 typedef struct action_t {
-    command_type cmd;
-    char path[MAX_PATH_LENGTH];
-    int file_size;
+  command_type cmd;
+  char path[MAX_PATH_LENGTH];
+  int file_size;
 } action_t;
 
 /////////////////////////////////////////////////////////////////////////////
@@ -79,3 +92,5 @@ int get_filesize();
 char* get_filename();
 int check_no_more_arguments();
 void show_help();
+
+#endif
