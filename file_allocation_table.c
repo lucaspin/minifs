@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <mem.h>
 #include "filesystem.h"
 #include "file_allocation_table.h"
 
@@ -36,16 +37,42 @@ directory* get_root() {
   return root;
 }
 
+int add_directory(directory* current_dir, char* new_dir_name) {
+  if (get_duplicate_name_in_directory(current_dir, new_dir_name)) {
+    printf("[ERROR] Duplicated name found %s\n", new_dir_name);
+    return -1;
+  }
+  uint8_t free_slot;
+  if (free_slot = get_first_slot_in_directory(current_dir)) {
+    printf("[DEBUG] Slot free found #: %d\n", free_slot);
+  }
+
+  //file_entry* new_entry;
+  //make_file_entry(new_dir_name, 0, new_entry);
+
+}
+
 void set_root(directory* root) {
   memcpy((void*)filesystem, (void*)root, BLOCK_SIZE);
 }
 
+
 int get_first_slot_in_directory(directory* dir) {
-  for (int i = 0; i < MAX_FILE_ENTRIES-1; i++) {
-//    if (dir->entries[i] == NULL) {
-//      return i;
-//    }
+  for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
+    //TODO: check this verification! I'm not happy with it!
+    if (dir->entries[i].file_name == NULL ) {
+      return i;
+    }
   }
+}
+
+int get_duplicate_name_in_directory(directory* dir, char* name) {
+  for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
+    if (strcmp(dir->entries[i].file_name, name)) {
+      return -1;
+    }
+  }
+  return 0;
 }
 
 int get_first_fat_available() {

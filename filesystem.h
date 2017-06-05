@@ -52,15 +52,18 @@ int make_file_entry(char* name, uint16_t file_size, file_entry* output);
 /**
  * TODO: mkdir command
  * @param   path to create the directory (name included)
- * @return  return 0 when successful, -1 invalid path
+ * @return  return 0 when successful,
+ *                 -1 invalid path
+ *                 -2 to subdirectories levels exceeded (8 maximum)
  */
 int make_directory(char* path);
 
 /**
  * parse the path and verify for maximum sublevels
- * @param   path to create the directory (name included)
+ * @param   full path to create the directory (name included)
  *          output_path_parsed: char* array to output the parsed path
- * @return  return the number of elements in the complete path when successful or -1 to invalid paths
+ * @return  return the number of elements in the complete path when successful
+ *          -1 to invalid paths
  */
 int parse_path(char *path, char** output_path_parsed);
 

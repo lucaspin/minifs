@@ -37,7 +37,8 @@ int make_file_entry(char* name, uint16_t file_size, file_entry* output) {
 
 //TODO: instantiate a directory
 int make_directory(char* path) {
-  //search the path given (if any)
+
+  // Parse the path
   char** parsed_path[MAX_DIRECTORY_SUBLEVELS+1];
   *parsed_path = malloc(sizeof(char) * (MAX_DIRECTORY_SUBLEVELS+1) * (MAX_FILE_NAME_SIZE+1));
   int path_levels = parse_path(path, parsed_path);
@@ -45,16 +46,27 @@ int make_directory(char* path) {
   // exiting when path is invalid
   if (path_levels == -1) {
     printf("[ERROR] Exceeded number os subdirectories!\n");
-    return -1;
+    return -2;
   }
 
-  // just debug the output parsed path
-  printf("[DEBUG] mkdir path_levels: %d\n", path_levels);
+  /* Verify if all the path exist, and if not, return an error
+   * and add the last one */
+  directory* current_directory = get_root();
+
   int i = 0;
-  while (*&parsed_path[i] != NULL) {
-    puts(*&parsed_path[i]);
+  while (i+1 != path_levels) {
+    current_directory = get_directory(*&parsed_path[i]);
+
+    if (current_directory == NULL) {
+      printf("[ERROR] Invalid Path! %s path not found!\n", *&parsed_path[i]);
+      return -1;
+    }
     i++;
   }
+
+  // the directory to add
+
+  add_directory(current_directory, *&parsed_path[i]);
 
   return 0;
 }
