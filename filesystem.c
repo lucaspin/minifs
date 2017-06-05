@@ -38,35 +38,34 @@ int make_file_entry(char* name, uint16_t file_size, file_entry* output) {
 //TODO: instantiate a directory
 int make_directory(char* path) {
   //search the path given (if any)
-  //printf("%s\n", path);
-
-  char* parsed_path[MAX_DIRECTORY_SUBLEVELS+1];
+  char** parsed_path[MAX_DIRECTORY_SUBLEVELS+1];
+  *parsed_path = malloc(sizeof(char) * (MAX_DIRECTORY_SUBLEVELS+1) * (MAX_FILE_NAME_SIZE+1));
   int path_levels = parse_path(path, parsed_path);
 
   // exiting when path is invalid
   if (path_levels == -1) {
-    printf("[ERROR] Invalid path!\n");
+    printf("[ERROR] Exceeded number os subdirectories!\n");
     return -1;
   }
 
-  // just debug the output
-//  int i = 0;
-//  while (parsed_path != NULL) {
-//    puts(parsed_path[++i]);
-//  }
-
+  // just debug the output parsed path
   printf("[DEBUG] mkdir path_levels: %d\n", path_levels);
+  int i = 0;
+  while (*&parsed_path[i] != NULL) {
+    puts(*&parsed_path[i]);
+    i++;
+  }
+
   return 0;
 }
 
-int parse_path(char* path, char* output_path_parsed) {
+int parse_path(char* path, char** output_path_parsed) {
   int count = 0;
   char* token;
-  char* paths[MAX_DIRECTORY_SUBLEVELS+1];
+
   //*output_path_parsed = &paths;
   token = strtok(path, SLASH_SEPARATOR);
-  paths[count] = token;
-  printf("[DEBUG] %s\n", paths[count]);
+  *&output_path_parsed[count] = token;
 
   while(token != NULL) {
     token = strtok(NULL, SLASH_SEPARATOR);
@@ -74,8 +73,7 @@ int parse_path(char* path, char* output_path_parsed) {
     if (count > MAX_DIRECTORY_SUBLEVELS) {
       return -1;
     }
-    paths[count] = token;
-    printf("[DEBUG] %s\n", paths[count]);
+    *&output_path_parsed[count] = token;
   }
   return count;
 }

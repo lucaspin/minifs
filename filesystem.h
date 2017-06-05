@@ -62,7 +62,7 @@ int make_directory(char* path);
  *          output_path_parsed: char* array to output the parsed path
  * @return  return the number of elements in the complete path when successful or -1 to invalid paths
  */
-int parse_path(char *path, char* output_path_parsed);
+int parse_path(char *path, char** output_path_parsed);
 
 void print_file_entry(file_entry* fe);
 
