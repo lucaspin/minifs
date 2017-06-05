@@ -20,6 +20,8 @@
 #define TRUE 1;
 #define FALSE 0;
 #define MAX_FILE_NAME_SIZE 12
+#define SLASH_SEPARATOR "/"
+#define MAX_DIRECTORY_SUBLEVELS 8
 
 typedef struct file_entry {
   char file_name[MAX_FILE_NAME_SIZE+1];
@@ -34,10 +36,34 @@ typedef struct directory {
 } directory;
 
 // variables
-char filesystem[SECTOR_NUMBER * BLOCK_SIZE];
+extern char filesystem[SECTOR_NUMBER * BLOCK_SIZE];
 
+/////////////////////////////////////////////////////////////////////////////
 // functions
-int make_file_entry(char* name, file_entry* output);
+/////////////////////////////////////////////////////////////////////////////
+
+/**
+ * TODO: verify and instantiate a file_entry
+ * @param
+ * @return
+ */
+int make_file_entry(char* name, uint16_t file_size, file_entry* output);
+
+/**
+ * TODO: mkdir command
+ * @param   path to create the directory (name included)
+ * @return  return 0 when successful, -1 invalid path
+ */
+int make_directory(char* path);
+
+/**
+ * parse the path and verify for maximum sublevels
+ * @param   path to create the directory (name included)
+ *          output_path_parsed: char* array to output the parsed path
+ * @return  return the number of elements in the complete path when successful or -1 to invalid paths
+ */
+int parse_path(char *path, char* output_path_parsed);
+
 void print_file_entry(file_entry* fe);
 
 #endif

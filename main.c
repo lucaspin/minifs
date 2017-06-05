@@ -20,6 +20,7 @@
 #define TRUE 1;
 #define FALSE 0;
 
+char filesystem[SECTOR_NUMBER * BLOCK_SIZE];
 int file_allocation_table[SECTOR_NUMBER];
 int memory_bitmap[SECTOR_NUMBER];
 
@@ -27,8 +28,9 @@ int main() {
   action_t* action = (action_t*) malloc(sizeof(action_t));
   initiate_fs();
 
-  printf("Sizeof file_entry: %d\n", sizeof(file_entry));
-  printf("Sizeof directory: %d\n", sizeof(directory));
+  printf("[DEBUG] sizeof directory: %d\n", sizeof(directory));
+  printf("[DEBUG] sizeof file_entry: %d\n", sizeof(file_entry));
+
   do {
     do {
       action = get_action_from_user();
@@ -37,7 +39,8 @@ int main() {
     switch (action->cmd) {
       case MKDIR:
         fprintf(stdout, "%s\n", MKDIR_COMMAND);
-        // TODO
+        // TODO:
+        make_directory(action->path);
         break;
       case MKFILE:
         fprintf(stdout, "%s\n", MKFILE_COMMAND);
@@ -65,6 +68,10 @@ int main() {
         break;
       case HELP:
         show_help();
+        break;
+      case CLEAR:
+        fprintf(stdout, "%s\n", CLEAR_COMMAND);
+        // TODO
         break;
       case EXIT:
         fprintf(stdout, "%s\n", EXIT_COMMAND);

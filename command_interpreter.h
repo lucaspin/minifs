@@ -27,6 +27,7 @@
 #define MAPSEC_COMMAND "mapsec"
 #define DIRTREE_COMMAND "dirtree"
 #define HELP_COMMAND "help"
+#define CLEAR_COMMAND "clear"
 #define EXIT_COMMAND "exit"
 #define COMMAND_DELIMITER " "
 
@@ -47,6 +48,7 @@ typedef enum {
   MAPSEC,
   DIRTREE,
   HELP,
+  CLEAR,
   EXIT
 } command_type;
 
