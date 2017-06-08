@@ -17,18 +17,46 @@
 extern int file_allocation_table[SECTOR_NUMBER];
 extern int memory_bitmap[SECTOR_NUMBER];
 
-/* setup root directory and stores it at the filesystem */
+/**
+ * Setup root directory and stores it at the filesystem
+ */
 void initiate_fs();
-directory* get_root();
-directory* get_directory(directory* current_dir);
+
+/**
+ * Get a reference to the root directory (inside the reserved space in the filesystem)
+ * @param   output_dir: this is a pointer to the searched root directory
+ */
+void get_root(directory* output_dir);
+
+/**
+ * Get a directory inside another
+ * @param   current_dir: this is the parent directory, it will be used as an output also
+ *          name: name of the searched directory
+ * @return  return 0 when successful, -1 otherwise
+ */
+int get_directory(directory* current_dir, char* dir_name);
+
+/**
+ * Get a directory from the filesystem (by index)
+ * @param   initial_block_offset: index in fat (not in bytes)
+ *          output_dir: holds the directory loaded from filesystem
+ */
+void get_directory_from_fat_by_id(int initial_block_offset, directory *output_dir);
+
 /**
  * Add a directory into another
- * @param   current_dir: this in parent directory
+ * @param   current_dir: this is the parent directory
  *          new_dir_name: the name of the directory to add inside the parent
  * @return  return 0 when successful, -1 otherwise
  */
 int add_directory(directory* current_dir, char* new_dir_name);
+
+/**
+ * memcopy the root directory inside the reserved space in the filesystem
+ * @param   output_dir: this is a pointer to the searched root directory
+ */
 void set_root(directory* root);
+
 /**
  * get the first slot available in a directory
  * @param   dir: this is the directory to look at

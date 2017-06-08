@@ -28,8 +28,9 @@ int main() {
   action_t* action = (action_t*) malloc(sizeof(action_t));
   initiate_fs();
 
-  printf("[DEBUG] sizeof directory: %d\n", sizeof(directory));
-  printf("[DEBUG] sizeof file_entry: %d\n", sizeof(file_entry));
+//  printf("[DEBUG] sizeof pointer: %d\n", sizeof(char*));
+//  printf("[DEBUG] sizeof directory: %d\n", sizeof(directory));
+//  printf("[DEBUG] sizeof file_entry: %d\n", sizeof(file_entry));
 
   do {
     do {

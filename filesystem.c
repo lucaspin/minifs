@@ -22,7 +22,7 @@ int make_file_entry(char* name, uint16_t file_size, file_entry* output) {
     int offset = index * BLOCK_SIZE;
     file_entry* entry = (file_entry*) malloc(sizeof(file_entry));
     //TODO: make a name validation
-    strncpy(entry->file_name, name, sizeof(name));
+    strncpy(entry->file_name, name, sizeof(&name));
     entry->is_directory = FALSE;
     entry->initial_block = index;
     entry->timestamp = time(NULL);
@@ -38,35 +38,43 @@ int make_file_entry(char* name, uint16_t file_size, file_entry* output) {
 //TODO: instantiate a directory
 int make_directory(char* path) {
 
-  // Parse the path
-  char** parsed_path[MAX_DIRECTORY_SUBLEVELS+1];
-  *parsed_path = malloc(sizeof(char) * (MAX_DIRECTORY_SUBLEVELS+1) * (MAX_FILE_NAME_SIZE+1));
+  /* Parse the path */
+  char** parsed_path = malloc (sizeof (char*) * (MAX_DIRECTORY_SUBLEVELS+1));
+  //char** p_parsed_path = parsed_path;
+  //*parsed_path = malloc(sizeof(char) * (MAX_DIRECTORY_SUBLEVELS+1) * (MAX_FILE_NAME_SIZE+1));
   int path_levels = parse_path(path, parsed_path);
 
-  // exiting when path is invalid
+  int j = 0;
+  while (parsed_path[j] != NULL) {
+    printf(" [DEBUG]Path[%d]: %s", j, *parsed_path[j]);
+    j++;
+  }
+
+  /* max subdirectories verification */
   if (path_levels == -1) {
     printf("[ERROR] Exceeded number os subdirectories!\n");
     return -2;
   }
 
-  /* Verify if all the path exist, and if not, return an error
-   * and add the last one */
-  directory* current_directory = get_root();
+  /* getting root */
+  directory* current_directory;
+  get_root(current_directory);
 
   int i = 0;
+  /* path verification */
   while (i+1 != path_levels) {
-    current_directory = get_directory(*&parsed_path[i]);
-
-    if (current_directory == NULL) {
-      printf("[ERROR] Invalid Path! %s path not found!\n", *&parsed_path[i]);
+    if (get_directory(current_directory, *parsed_path[i])) {
+      printf("[DEBUG] Directory %s found!\n", *parsed_path[i]);
+    } else {
+      printf("[ERROR] Directory %s not found!\n", *parsed_path[i]);
       return -1;
     }
     i++;
   }
 
-  // the directory to add
-
-  add_directory(current_directory, *&parsed_path[i]);
+  /* the directory to add */
+  add_directory(current_directory, *parsed_path[i]);
+  //TODO: add some errors verification
 
   return 0;
 }
@@ -75,9 +83,12 @@ int parse_path(char* path, char** output_path_parsed) {
   int count = 0;
   char* token;
 
-  //*output_path_parsed = &paths;
+  *output_path_parsed = malloc(sizeof(char*) * (MAX_DIRECTORY_SUBLEVELS + 1));
   token = strtok(path, SLASH_SEPARATOR);
-  *&output_path_parsed[count] = token;
+  int offset = sizeof(char*) * count;
+  //*output_path_parsed+offset = token;
+  memcpy(*output_path_parsed+offset, token, sizeof(char*));
+  //strcpy(*output_path_parsed[count], token);
 
   while(token != NULL) {
     token = strtok(NULL, SLASH_SEPARATOR);
@@ -85,7 +96,10 @@ int parse_path(char* path, char** output_path_parsed) {
     if (count > MAX_DIRECTORY_SUBLEVELS) {
       return -1;
     }
-    *&output_path_parsed[count] = token;
+    offset = sizeof(char*) * count;
+    //*output_path_parsed[offset] = token;
+    memcpy(*output_path_parsed+offset, token, sizeof(char*));
+    //strcpy(*output_path_parsed[count], token);
   }
   return count;
 }
