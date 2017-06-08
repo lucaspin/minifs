@@ -39,14 +39,16 @@ int make_file_entry(char* name, uint16_t file_size, file_entry* output) {
 int make_directory(char* path) {
 
   /* Parse the path */
-  char** parsed_path = malloc (sizeof (char*) * (MAX_DIRECTORY_SUBLEVELS+1));
+  char* parsed_path = malloc (sizeof (char*) * (MAX_DIRECTORY_SUBLEVELS+1));
+  printf("parsed_path malloc'ed size: %d \n", (sizeof (char*) * (MAX_DIRECTORY_SUBLEVELS+1)));
   //char** p_parsed_path = parsed_path;
   //*parsed_path = malloc(sizeof(char) * (MAX_DIRECTORY_SUBLEVELS+1) * (MAX_FILE_NAME_SIZE+1));
-  int path_levels = parse_path(path, parsed_path);
+  int path_levels = parse_path(path, &parsed_path);
 
   int j = 0;
-  while (parsed_path[j] != NULL) {
-    printf(" [DEBUG]Path[%d]: %s", j, *parsed_path[j]);
+  int offset = j * sizeof(char*);
+  while (parsed_path[offset] != NULL) {
+    printf(" [DEBUG]Path[%d]: %s", j, parsed_path[offset]);
     j++;
   }
 
@@ -63,17 +65,17 @@ int make_directory(char* path) {
   int i = 0;
   /* path verification */
   while (i+1 != path_levels) {
-    if (get_directory(current_directory, *parsed_path[i])) {
-      printf("[DEBUG] Directory %s found!\n", *parsed_path[i]);
+    if (get_directory(current_directory, &parsed_path[i])) {
+      printf("[DEBUG] Directory %s found!\n", &parsed_path[i]);
     } else {
-      printf("[ERROR] Directory %s not found!\n", *parsed_path[i]);
+      printf("[ERROR] Directory %s not found!\n", &parsed_path[i]);
       return -1;
     }
     i++;
   }
 
   /* the directory to add */
-  add_directory(current_directory, *parsed_path[i]);
+  add_directory(current_directory, &parsed_path[i]);
   //TODO: add some errors verification
 
   return 0;
@@ -83,7 +85,7 @@ int parse_path(char* path, char** output_path_parsed) {
   int count = 0;
   char* token;
 
-  *output_path_parsed = malloc(sizeof(char*) * (MAX_DIRECTORY_SUBLEVELS + 1));
+  //*output_path_parsed = malloc((MAX_FILE_NAME_SIZE+1) * (MAX_DIRECTORY_SUBLEVELS+1));
   token = strtok(path, SLASH_SEPARATOR);
   int offset = sizeof(char*) * count;
   //*output_path_parsed+offset = token;
@@ -97,8 +99,11 @@ int parse_path(char* path, char** output_path_parsed) {
       return -1;
     }
     offset = sizeof(char*) * count;
-    //*output_path_parsed[offset] = token;
-    memcpy(*output_path_parsed+offset, token, sizeof(char*));
+    if (token) {
+      memcpy(*output_path_parsed+offset, token, sizeof(char*));
+    } else {
+      *output_path_parsed[offset] = NULL;
+    }
     //strcpy(*output_path_parsed[count], token);
   }
   return count;
