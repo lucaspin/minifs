@@ -25,12 +25,10 @@ int file_allocation_table[SECTOR_NUMBER];
 int memory_bitmap[SECTOR_NUMBER];
 
 int main() {
-  action_t* action = (action_t*) malloc(sizeof(action_t));
-  initiate_fs();
-
-//  printf("[DEBUG] sizeof pointer: %d\n", sizeof(char*));
-//  printf("[DEBUG] sizeof directory: %d\n", sizeof(directory));
-//  printf("[DEBUG] sizeof file_entry: %d\n", sizeof(file_entry));
+  action_t* action;
+  initialize_file_allocation_table();
+  initialize_memory_bitmap();
+  initialize_fs();
 
   do {
     do {

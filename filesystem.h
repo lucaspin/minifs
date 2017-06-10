@@ -47,7 +47,12 @@ extern char filesystem[SECTOR_NUMBER * BLOCK_SIZE];
  * @param
  * @return
  */
-int make_file_entry(char* name, uint16_t file_size, file_entry* output);
+file_entry* make_file_entry(char* name, uint16_t file_size, int initial_block, int is_directory);
+
+/**
+ * Setup root directory and stores it at the filesystem
+ */
+void initialize_fs();
 
 /**
  * TODO: mkdir command
@@ -65,7 +70,7 @@ int make_directory(char* path);
  * @return  return the number of elements in the complete path when successful
  *          -1 to invalid paths
  */
-int parse_path(char *path, char** output_path_parsed);
+int parse_path(char *path, char output_path_parsed[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE]);
 
 void print_file_entry(file_entry* fe);
 

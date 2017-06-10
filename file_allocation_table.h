@@ -12,21 +12,15 @@
 #define FILE_ALLOCATION_TABLE_H
 
 #include "filesystem.h"
-//#include "file_allocation_table.h"
 
-extern int file_allocation_table[SECTOR_NUMBER];
-extern int memory_bitmap[SECTOR_NUMBER];
-
-/**
- * Setup root directory and stores it at the filesystem
- */
-void initiate_fs();
+int file_allocation_table[SECTOR_NUMBER];
+int memory_bitmap[SECTOR_NUMBER];
 
 /**
  * Get a reference to the root directory (inside the reserved space in the filesystem)
  * @param   output_dir: this is a pointer to the searched root directory
  */
-void get_root(directory* output_dir);
+directory* get_root_directory();
 
 /**
  * Get a directory inside another
@@ -34,7 +28,7 @@ void get_root(directory* output_dir);
  *          name: name of the searched directory
  * @return  return 0 when successful, -1 otherwise
  */
-int get_directory(directory* current_dir, char* dir_name);
+int get_directory(directory* current_dir, int* current_dir_initial_block, char* dir_name);
 
 /**
  * Get a directory from the filesystem (by index)
@@ -49,20 +43,19 @@ void get_directory_from_fat_by_id(int initial_block_offset, directory *output_di
  *          new_dir_name: the name of the directory to add inside the parent
  * @return  return 0 when successful, -1 otherwise
  */
-int add_directory(directory* current_dir, char* new_dir_name);
+int add_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name);
 
 /**
  * memcopy the root directory inside the reserved space in the filesystem
- * @param   output_dir: this is a pointer to the searched root directory
  */
-void set_root(directory* root);
+void set_root_directory();
 
 /**
- * get the first slot available in a directory
+ * get the next slot available in a directory
  * @param   dir: this is the directory to look at
  * @return  return the index of the first slot available, or -1 otherwise
  */
-int get_first_slot_in_directory(directory* dir);
+uint8_t get_next_available_slot(directory* dir);
 
 /**
  * verify for duplicates names in a directory
@@ -73,6 +66,8 @@ int get_first_slot_in_directory(directory* dir);
 int get_duplicate_name_in_directory(directory* dir, char* name);
 int get_first_fat_available();
 int set_entry_fat(int index, int lookup);
+void initialize_file_allocation_table();
+void initialize_memory_bitmap();
 int free_fat(int index);
 void print_fat();
 
