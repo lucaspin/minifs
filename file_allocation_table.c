@@ -81,15 +81,27 @@ int add_directory(directory* current_dir, int current_dir_initial_block, char* n
 
 // TODO:
 int print_directory(directory* dir) {
+  int total_directory_size = 0;
+  int total_number_files = 0;
+  int total_number_dirs = 0;
+
   /* for each VALID file_entry in dir, print it */
-  fprintf(stdout, "print_directory not implemented yet!\n");
+  fprintf(stdout, "Listing...\n\n");
   int i = 0;
   for (i = 0; i < MAX_FILE_ENTRIES; i++) {
     file_entry* fe = &dir->entries[i];
+    /* filestamp is our validation */
     if (fe->timestamp != 0) {
       print_file_entry(fe);
+      if (fe->is_directory == 1) total_number_dirs++;
+      if (fe->is_directory == 0) {
+        total_number_files++;
+        total_directory_size += fe->file_size;
+      }
     }
   }
+  fprintf(stdout,"\n \t\t\t %d File(s) \t \t \t %d bytes\n ", total_number_files, total_directory_size );
+  fprintf(stdout,"\t\t\t %d Dir(s) \t \t \t %d bytes free\n", total_number_dirs, get_total_free_space() );
   return 0;
   }
 

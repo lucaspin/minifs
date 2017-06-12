@@ -85,4 +85,10 @@ int parse_path(char *path, char output_path_parsed[MAX_DIRECTORY_SUBLEVELS][MAX_
 
 void print_file_entry(file_entry* fe);
 
+char* timestamp_to_string(uint32_t timestamp);
+
+int get_total_free_space();
+
+char* is_directory_to_string(int is_directory);
+
 #endif

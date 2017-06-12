@@ -134,9 +134,26 @@ int parse_path(char* path, char output_path_parsed[MAX_DIRECTORY_SUBLEVELS][MAX_
 }
 
 void print_file_entry(file_entry* fe) {
-  fprintf(stdout, "[DEBUG] file name: %s\n", fe->file_name);
-  fprintf(stdout, "[DEBUG] is_directory: %d\n", fe->is_directory);
-  fprintf(stdout, "[DEBUG] initial block: %u\n", fe->initial_block);
-  fprintf(stdout, "[DEBUG] file size: %u\n", fe->file_size);
-  fprintf(stdout, "[DEBUG] time stamp: %u\n", fe->timestamp);
+  fprintf(stdout, "%s [isDir] %d %s \t [size] %u [name] %s \n",
+          timestamp_to_string(fe->timestamp), fe->is_directory, is_directory_to_string(fe->is_directory),fe->file_size, fe->file_name);
+}
+
+char* timestamp_to_string(uint32_t timestamp) {
+  time_t raw_time = timestamp;
+  /* removing '\n' */
+  char* output_string = ctime(&raw_time);
+  return strtok(output_string, "\n");
+}
+
+//TODO: get free space (bytes) for listdir
+int get_total_free_space() {
+  return 42;
+}
+
+char* is_directory_to_string(int is_directory) {
+  if (is_directory == 1) {
+    return "<DIR>";
+  } else {
+    return "";
+  }
 }
