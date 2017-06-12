@@ -54,6 +54,8 @@ file_entry* make_file_entry(char* name, uint16_t file_size, int initial_block, i
  */
 void initialize_fs();
 
+void nullify_path_matrix(char matrix[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE]);
+
 /**
  * TODO: mkdir command
  * @param   path to create the directory (name included)
@@ -62,6 +64,15 @@ void initialize_fs();
  *                 -2 to subdirectories levels exceeded (8 maximum)
  */
 int make_directory(char* path);
+
+/**
+ * list the files and sub-directories
+ * @param   path to list (name included)
+ * @return  return 0 when successful
+ *                 -1 invalid path
+ *                 -2 to subdirectories levels exceeded (8 maximum)
+ */
+int list_dir(char* path);
 
 /**
  * parse the path and verify for maximum sublevels

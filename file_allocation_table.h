@@ -46,6 +46,13 @@ void get_directory_from_fat_by_id(int initial_block_offset, directory *output_di
 int add_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name);
 
 /**
+ * Print out a directory to the screen
+ * @param   dir: directory to be printed
+ * @return  return 0 when successful, -1 otherwise
+ */
+int print_directory(directory* dir);
+
+/**
  * memcopy the root directory inside the reserved space in the filesystem
  */
 void set_root_directory();

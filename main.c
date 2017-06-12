@@ -52,6 +52,7 @@ int main() {
       case LISTDIR:
         fprintf(stdout, "%s\n", LISTDIR_COMMAND);
         // TODO
+        list_dir(action->path);
         break;
       case SHOWSEC:
         fprintf(stdout, "%s\n", SHOWSEC_COMMAND);

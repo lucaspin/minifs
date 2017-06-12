@@ -79,6 +79,20 @@ int add_directory(directory* current_dir, int current_dir_initial_block, char* n
   return 0;
 }
 
+// TODO:
+int print_directory(directory* dir) {
+  /* for each VALID file_entry in dir, print it */
+  fprintf(stdout, "print_directory not implemented yet!\n");
+  int i = 0;
+  for (i = 0; i < MAX_FILE_ENTRIES; i++) {
+    file_entry* fe = &dir->entries[i];
+    if (fe->timestamp != 0) {
+      print_file_entry(fe);
+    }
+  }
+  return 0;
+  }
+
 void set_root_directory() {
   directory* root = malloc(sizeof(directory));
   memcpy((void*) filesystem, (void*) root, BLOCK_SIZE);
