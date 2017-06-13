@@ -8,13 +8,13 @@ This is an educational project for the OS-II class on Sao Paulo State University
 
 [ ] Allow file allocation in a non-contiguous manner. Suggestion: use a block allocation table and a bitmap to manage the free space.
 
-[ ] Allow directory and sub-directory creation with the command `mkdir`, until a maximum of 8 levels. Each directory can contain several sub-directories. Each directory/sub-directory occupies one sector of the disk.
+[x] Allow directory and sub-directory creation with the command `mkdir`, until a maximum of 8 levels. Each directory can contain several sub-directories. Each directory/sub-directory occupies one sector of the disk.
 
 [ ] Allow file creation inside the directories and sub-directories with the command `mkfile`. Each directory can contain several files. When creating a file, its size must be specified (size in bytes), and disk sectors must be allocated accordingly. File names must be unique inside a directory/sub-directory.
 
-[ ] Allow directory/sub-directory deletion with the command `rmdir`. Empty directories can't be deleted.
+[ ] Allow directory/sub-directory deletion with the command `rmdir`. Non-Empty directories can't be deleted.
 
-[ ] list the files and sub-directories with the command `listdir`. On the list:
+[x] list the files and sub-directories with the command `listdir`. On the list:
 
   * directories must indicate that they are directories
   * files must show size, time and creation date
@@ -27,9 +27,9 @@ This is an educational project for the OS-II class on Sao Paulo State University
 
 [ ] `dirtree` command to show the filesystem tree of directories
 
-[ ] `help` command to show the available commands
+[x] `help` command to show the available commands
 
-[ ] `exit` command to exit the program
+[x] `exit` command to exit the program
 
 #### Authors
  * Dalton Lima @daltonbr
