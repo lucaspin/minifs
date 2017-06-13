@@ -120,9 +120,6 @@ int check_command(char* command, action_t* action) {
     char* filename = get_filename();
     if (filename != NULL) {
       strcpy(action->path, filename);
-    } else {
-      fprintf(stderr, "\n%s\n", "You must specify a directory name!");
-      return 0;
     }
   } else if (!strcmp(command, SHOWSEC_COMMAND)) {
     action->cmd = SHOWSEC;

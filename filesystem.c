@@ -76,25 +76,20 @@ int make_directory(char* path) {
   return 0;
 }
 
-/**
- * TODO: directories must indicate that they are directories
- * TODO: files must show size, time and creation date
- * TODO: In the end, it must appear: the total number of files and directories, the total size of files and directories and the amount of free disk space.
- */
 int list_dir(char* path) {
   char parsed_path[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE];
   nullify_path_matrix(parsed_path);
 
   int path_levels = parse_path(path, parsed_path);
 
-  if (path_levels > 0) {
+  if (path_levels >= 0) {
     int i = 0;
     directory* current_directory = get_root_directory();
     int current_directory_initial_block = 0;
 
     /* path verification */
     while (i < path_levels) {
-      if (i != (path_levels - 1) && get_directory(current_directory, &current_directory_initial_block, parsed_path[i])) {
+      if (get_directory(current_directory, &current_directory_initial_block, parsed_path[i])) {
         fprintf(stderr, "[ERROR] Directory %s does not exist!\n", parsed_path[i]);
         return -1;
       }

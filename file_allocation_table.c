@@ -79,7 +79,6 @@ int add_directory(directory* current_dir, int current_dir_initial_block, char* n
   return 0;
 }
 
-// TODO:
 int print_directory(directory* dir) {
   int total_directory_size = 0;
   int total_number_files = 0;
