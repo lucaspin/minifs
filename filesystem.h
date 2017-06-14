@@ -95,7 +95,6 @@ char* timestamp_to_string(uint32_t timestamp);
 int get_total_free_space_in_bytes();
 int get_total_free_space_in_sectors();
 
-//TODO:
-int print_sectors_used_by_file();
+int print_sectors_used_by_file(char* path);
 
 #endif

@@ -181,11 +181,55 @@ int get_total_free_space_in_bytes() {
   return get_total_free_space_in_sectors() * BLOCK_SIZE;
 }
 
-//TODO:
 int get_total_free_space_in_sectors() {
   int i, free_sector_count = 0;
   for (i = 0; i < SECTOR_NUMBER; i++){
     if (memory_bitmap[i] == 0) {free_sector_count++;}
   }
   return free_sector_count;
+}
+
+int print_sectors_used_by_file(char* path) {
+  char parsed_path[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE];
+  nullify_path_matrix(parsed_path);
+
+  int path_levels = parse_path(path, parsed_path);
+
+  if (path_levels > 0) {
+    int i = 0;
+    directory *current_directory = get_root_directory();
+    int current_directory_initial_block = 0;
+
+    /* path verification */
+    while (i < path_levels) {
+      if (i != (path_levels - 1) &&
+          get_directory(current_directory, &current_directory_initial_block, parsed_path[i])) {
+        fprintf(stderr, "[ERROR] Directory %s does not exist!\n", parsed_path[i]);
+        return -1;
+      }
+      i++;
+    }
+
+    /* Finding the file */
+    file_entry *fe = (get_file_entry_in_dir(current_directory, parsed_path[i - 1]));
+    if (fe != NULL) {
+      fprintf(stdout, "[DEBUG] File found %s\n", fe->file_name);
+
+      /* iterating over all sector*/
+      int next_file_sector = get_next_fat_index(fe->initial_block);
+
+      fprintf(stdout, "Sectors used by %s: %d ", fe->file_name, fe->initial_block);
+
+      while (next_file_sector != -1) {
+        fprintf(stdout, "%d ", next_file_sector);
+        next_file_sector = get_next_fat_index(next_file_sector);
+      }
+      fprintf(stdout, "\n");
+    } else {
+      fprintf(stderr, "[ERROR] File %s cannot be found!\n", parsed_path[i - 1]);
+      return -1;
+    }
+  }
+  return 0;
+
 }

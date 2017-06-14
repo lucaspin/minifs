@@ -113,4 +113,18 @@ void print_map_sec();
  *          -2 will indicate an ERROR: fat_index out-of-bounds
  */
 int get_next_fat_index(int fat_index);
+
+file_entry* get_file_entry_in_dir(directory* current_dir, char* file_name);
+
+/**
+ * is this file_entry a valid DIRECTORY
+ * @return  return 0 when successful, -1 otherwise
+ */
+int is_valid_directory(file_entry* fe);
+
+/**
+ * is this file_entry a valid FILE
+ * @return  return 0 when successful, -1 otherwise
+ */
+int is_valid_file(file_entry* fe);
 #endif

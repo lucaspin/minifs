@@ -290,3 +290,32 @@ int get_next_fat_index(int fat_index) {
   return file_allocation_table[fat_index];
 }
 
+file_entry* get_file_entry_in_dir(directory* current_dir, char* file_name) {
+  file_entry* temp_fe;
+  for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
+    temp_fe = &current_dir->entries[i];
+    if (is_valid_file(temp_fe)) {
+      /* match */
+      if (!strcmp(temp_fe->file_name, file_name)) {
+        return temp_fe;
+      }
+    }
+  }
+  return NULL;
+}
+
+int is_valid_directory(file_entry* fe) {
+  if (fe->timestamp != 0 && fe->is_directory == 1) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int is_valid_file(file_entry* fe) {
+  if (fe->timestamp != 0 && fe->is_directory == 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}

@@ -54,8 +54,7 @@ int main() {
         list_dir(action->path);
         break;
       case SHOWSEC:
-        fprintf(stdout, "%s\n", SHOWSEC_COMMAND);
-        // TODO
+        print_sectors_used_by_file(action->path);
         break;
       case MAPSEC:
         print_map_sec();
