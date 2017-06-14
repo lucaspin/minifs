@@ -67,7 +67,7 @@ int add_file(directory* current_dir, int current_dir_initial_block, char* new_fi
   }
 
   if ((free_slot = get_next_available_slot(current_dir)) == -1) {
-    fprintf(stderr, "%s\n", "No more slots available on directory!");
+    fprintf(stderr, "%s\n", "[ERROR] No more slots available on directory!");
     return -2;
   }
 
@@ -103,7 +103,7 @@ int add_directory(directory* current_dir, int current_dir_initial_block, char* n
   uint8_t free_slot;
 
   if (get_duplicate_name_in_directory(current_dir, new_dir_name)) {
-    printf("[ERROR] Duplicated name found %s\n", new_dir_name);
+    fprintf(stderr, "[ERROR] Duplicated name found %s\n", new_dir_name);
     return -1;
   }
 

@@ -15,24 +15,23 @@
 #include "file_allocation_table.h"
 
 void initialize_fs() {
-  // TODO: setup boot sector
-  /* The boot sector itself is a reserved space, the only thing that
+
+  /* -= setup boot sector =-
+   * The boot sector itself is a reserved space, the only thing that
    * we are going to do there is to allocate the root directory
    * (even that won't be really needed) */
 
-  // TODO: setup filesystem itself
-  /* Filesystem is instantiated globally in main.c
-   * using it like a sort of singleton
-   * thought about that? */
+  /* -= setup filesystem itself =-
+   * The filesystem is instantiated globally in main.c
+   * we use it like a sort of singleton */
 
-  // setup root directory
+  /* setup root directory */
   set_root_directory();
 }
 
 file_entry* make_file_entry(char* name, uint16_t file_size, int initial_block, int is_directory) {
   file_entry* entry = (file_entry*) malloc(sizeof(file_entry*));
-  // TODO: make a name validation
-  strncpy(entry->file_name, name, sizeof(&name));
+  strncpy(entry->file_name, name, MAX_FILE_NAME_SIZE+1);
   entry->is_directory = (uint8_t) is_directory;
   entry->file_size = (uint16_t) file_size;
   entry->initial_block = (uint8_t) initial_block;
@@ -96,7 +95,7 @@ int make_file(char* path, int file_size) {
       i++;
     }
 
-    /* if file cannot be added */
+    /* adding the file */
     if(add_file(current_directory, current_directory_initial_block, parsed_path[i - 1], file_size) == 0) {
       fprintf(stdout, "[DEBUG] Creating file %s with size %d\n", parsed_path[i - 1], file_size);
     } else {
