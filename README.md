@@ -10,7 +10,7 @@ This is an educational project for the OS-II class on Sao Paulo State University
 
 [x] Allow directory and sub-directory creation with the command `mkdir`, until a maximum of 8 levels. Each directory can contain several sub-directories. Each directory/sub-directory occupies one sector of the disk.
 
-[ ] Allow file creation inside the directories and sub-directories with the command `mkfile`. Each directory can contain several files. When creating a file, its size must be specified (size in bytes), and disk sectors must be allocated accordingly. File names must be unique inside a directory/sub-directory.
+[x] Allow file creation inside the directories and sub-directories with the command `mkfile`. Each directory can contain several files. When creating a file, its size must be specified (size in bytes), and disk sectors must be allocated accordingly. File names must be unique inside a directory/sub-directory.
     
 [ ] Allow directory/sub-directory deletion with the command `rmdir`. Non-Empty directories can't be deleted.
 

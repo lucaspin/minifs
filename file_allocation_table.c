@@ -83,20 +83,21 @@ int add_file(directory* current_dir, int current_dir_initial_block, char* new_fi
   }
 
   // add file entry to parent directory and update it on fs
-  int index = get_first_fat_available();
-  file_entry* new_entry = make_file_entry(new_file_name, file_size, index, 0);
+  int fat_initial_index = get_first_fat_available();
+  file_entry* new_entry = make_file_entry(new_file_name, file_size, fat_initial_index, 0);
   current_dir->entries[free_slot] = *new_entry;
   memcpy((void*) filesystem + (current_dir_initial_block * BLOCK_SIZE), (void*) current_dir, BLOCK_SIZE);
 
-  //TODO: allocate entries in FAT (logically allocating the file)
+  /* Allocate entries in FAT and its memory_bitmap (logically allocating the file)
+   * We aren't allocating physical data into the filesystem */
+  if (allocate_n_fat_slots(sectors_needed, fat_initial_index) == 0) {
+    fprintf(stdout, "[DEBUG] File allocated\n");
+    return 0;
+  } else {
+    fprintf(stderr, "[ERROR] Can't allocate file\n");
+    return -4;
+  }
 
-  //TODO: (BONUS, Optional) copy dummy file data into the filesystem
-  // create new directory structure on filesystem
-//  int offset = index * BLOCK_SIZE;
-//  directory* new_directory = malloc(sizeof(directory));
-//  memcpy((void*) filesystem + offset, (void*) new_directory, BLOCK_SIZE);
-//  memory_bitmap[index] = 1;
-  return 0;
 }
 
 int add_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name) {
@@ -178,6 +179,44 @@ int get_duplicate_name_in_directory(directory* dir, char* name) {
   return 0;
 }
 
+int allocate_n_fat_slots(int number_sector_to_allocate, int initial_fat_index) {
+  /* validation */
+  if (memory_bitmap[initial_fat_index] == 1) {
+    fprintf(stderr, "[ERROR] Initial_fat_index already in use");
+    return -3;
+  }
+  if (number_sector_to_allocate < 0) {
+    fprintf(stderr, "[ERROR] Invalid value in 'allocate_n_fat_slots'");
+    return -2;
+  }
+  if (number_sector_to_allocate > get_total_free_space_in_sectors()) {
+    fprintf(stderr, "[ERROR] Insufficient free sectors in FAT");
+    return -1;
+  }
+
+  /* allocating */
+  int remaining_sectors = number_sector_to_allocate;
+  int current_index = initial_fat_index;
+
+  for (; remaining_sectors > 0; remaining_sectors--) {
+
+    /* set that sector to 'busy' */
+    memory_bitmap[current_index] = 1;
+
+    /* if it's the last sector to allocate */
+    if (remaining_sectors == 1) {
+      fprintf(stdout, "[DEBUG] Allocating n=%d, FAT[%d] = %d, ", remaining_sectors, current_index, file_allocation_table[current_index]);
+      file_allocation_table[current_index] = -1;
+      return 0;
+    } else {
+      file_allocation_table[current_index] = get_first_fat_available();
+      fprintf(stdout, "[DEBUG] Allocating n=%d, FAT[%d] = %d, ", remaining_sectors, current_index, file_allocation_table[current_index]);
+      current_index = get_first_fat_available();
+    }
+
+  }
+}
+
 int get_first_fat_available() {
   int count = 0;
 
@@ -187,6 +226,12 @@ int get_first_fat_available() {
     }
   }
   return -1;
+}
+
+int set_fat_by_index(int index, int value) {
+  memory_bitmap[index] = 1;
+  file_allocation_table[index] = value;
+  return 0;
 }
 
 int set_entry_fat(int index, int lookup) {
@@ -213,5 +258,14 @@ void print_fat() {
       fprintf(stdout, "fat[%d]: %d | ",count, file_allocation_table[count]);
     }
   }
+}
+
+int get_next_fat_index(int fat_index) {
+  if (fat_index > SECTOR_NUMBER -1 || fat_index < -1) {
+    fprintf(stderr, "[ERROR] Unexpected behaviour!! fat_index out-of bounds!");
+    return -2;
+  }
+
+  return file_allocation_table[fat_index];
 }
 

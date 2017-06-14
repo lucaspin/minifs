@@ -90,13 +90,12 @@ int list_dir(char* path);
  *          -1 to invalid paths
  */
 int parse_path(char *path, char output_path_parsed[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE]);
-
 void print_file_entry(file_entry* fe);
-
 char* timestamp_to_string(uint32_t timestamp);
-
 int get_total_free_space_in_bytes();
-
 int get_total_free_space_in_sectors();
+
+//TODO:
+int print_sectors_used_by_file();
 
 #endif
