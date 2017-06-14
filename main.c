@@ -37,21 +37,16 @@ int main() {
 
     switch (action->cmd) {
       case MKDIR:
-        fprintf(stdout, "%s\n", MKDIR_COMMAND);
-        // TODO:
         make_directory(action->path);
         break;
       case MKFILE:
-        fprintf(stdout, "%s\n", MKFILE_COMMAND);
-        // TODO:
+        make_file(action->path, action->file_size);
         break;
       case RMDIR:
         fprintf(stdout, "%s\n", RMDIR_COMMAND);
         // TODO
         break;
       case LISTDIR:
-        fprintf(stdout, "%s\n", LISTDIR_COMMAND);
-        // TODO
         list_dir(action->path);
         break;
       case SHOWSEC:

@@ -57,7 +57,6 @@ void initialize_fs();
 void nullify_path_matrix(char matrix[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE]);
 
 /**
- * TODO: mkdir command
  * @param   path to create the directory (name included)
  * @return  return 0 when successful,
  *                 -1 invalid path
@@ -66,11 +65,20 @@ void nullify_path_matrix(char matrix[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE
 int make_directory(char* path);
 
 /**
+ * @param   path to create the directory (name included)
+ * @return  return 0 when successful,
+ *                 -1 invalid path
+ *                 -2 to subdirectories levels exceeded (8 maximum)
+ */
+int make_file(char* path, int file_size);
+
+/**
  * list the files and sub-directories
  * @param   path to list (name included)
  * @return  return 0 when successful
  *                 -1 invalid path
  *                 -2 to subdirectories levels exceeded (8 maximum)
+ *                 -3 file cannot be created
  */
 int list_dir(char* path);
 
@@ -87,8 +95,8 @@ void print_file_entry(file_entry* fe);
 
 char* timestamp_to_string(uint32_t timestamp);
 
-int get_total_free_space();
+int get_total_free_space_in_bytes();
 
-char* is_directory_to_string(int is_directory);
+int get_total_free_space_in_sectors();
 
 #endif

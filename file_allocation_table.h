@@ -38,6 +38,14 @@ int get_directory(directory* current_dir, int* current_dir_initial_block, char* 
 void get_directory_from_fat_by_id(int initial_block_offset, directory *output_dir);
 
 /**
+ * Add a file into a directory
+ * @param   current_dir: this is the parent directory
+ *          file_size: file size in bytes
+ * @return  return 0 when successful, -1 otherwise
+ */
+int add_file(directory* current_dir, int current_dir_initial_block, char* new_file_name, int file_size);
+
+/**
  * Add a directory into another
  * @param   current_dir: this is the parent directory
  *          new_dir_name: the name of the directory to add inside the parent

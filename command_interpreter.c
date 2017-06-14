@@ -51,12 +51,8 @@ int get_filesize() {
   char* string_after_number;
   long int value = strtol(file_size, &string_after_number, 10);
 
-  // TODO: this check should be with the free number of sectors instead
-  if (value >= SECTOR_NUMBER) {
-    fprintf(stderr, "\n%s\n", "File to big!");
-    return NULL;
-  } else if (value == 0) {
-    fprintf(stderr, "\n%s\n", "This isn't a valid file size!");
+  if (value <= 0) {
+    fprintf(stderr, "\n%s\n", "[ERROR] This isn't a valid file size! It must be a positive integer value!");
     return NULL;
   }
 
@@ -65,7 +61,7 @@ int get_filesize() {
 
 int check_no_more_arguments() {
   if (strtok(NULL, COMMAND_DELIMITER) != NULL) {
-    fprintf(stderr, "\n%s\n\n", "Too many arguments!");
+    fprintf(stderr, "\n%s\n\n", "[ERROR] Too many arguments!");
     return 0;
   }
 
@@ -81,7 +77,7 @@ int check_command(char* command, action_t* action) {
     if (filename != NULL) {
       strcpy(action->path, filename);
     } else {
-      fprintf(stderr, "\n%s\n", "You must specify a directory name!");
+      fprintf(stderr, "\n%s\n", "[ERROR] You must specify a directory name!");
       return 0;
     }
 
@@ -92,7 +88,7 @@ int check_command(char* command, action_t* action) {
     if (filename != NULL) {
       strcpy(action->path, filename);
     } else {
-      fprintf(stderr, "\n%s\n", "You must specify a file name!");
+      fprintf(stderr, "\n%s\n", "[ERROR] You must specify a file name!");
       return 0;
     }
 
@@ -110,7 +106,7 @@ int check_command(char* command, action_t* action) {
     if (filename != NULL) {
       strcpy(action->path, filename);
     } else {
-      fprintf(stderr, "\n%s\n", "You must specify a directory name!");
+      fprintf(stderr, "\n%s\n", "[ERROR] You must specify a directory name!");
       return 0;
     }
   } else if (!strcmp(command, LISTDIR_COMMAND)) {
@@ -129,7 +125,7 @@ int check_command(char* command, action_t* action) {
     if (filename != NULL) {
       strcpy(action->path, filename);
     } else {
-      fprintf(stderr, "\n%s\n", "You must specify a file name!");
+      fprintf(stderr, "\n%s\n", "[ERROR] You must specify a file name!");
       return 0;
     }
   } else if (!strcmp(command, MAPSEC_COMMAND)) {
@@ -149,7 +145,7 @@ int check_command(char* command, action_t* action) {
     strcpy(action->path, "");
     action->file_size = 0;
   } else {
-    fprintf(stderr, "\n%s\n", "I'm sorry, my friend, but this isn't a valid command!\n");
+    fprintf(stderr, "\n%s\n", "[ERROR] Invalid command! Type 'help' for a list of commands!\n");
     // TODO: show help menu
     return 0;
   }
@@ -166,6 +162,6 @@ void show_help() {
   fprintf(stdout, "\t\t%s %s - %s\n", SHOWSEC_COMMAND, "<path_name>", "Show the sectors that a file occupies");
   fprintf(stdout, "\t\t%s - %s\n", MAPSEC_COMMAND, "Show the sector map for all the filesystem");
   fprintf(stdout, "\t\t%s - %s\n", DIRTREE_COMMAND, "Show the directory tree");
-  fprintf(stdout, "\t\t%s - %s\n", HELP_COMMAND, "Help, deeer");
+  fprintf(stdout, "\t\t%s - %s\n", HELP_COMMAND, "Help! But if you are here, you don't really needed this disclaimer =) !");
   fprintf(stdout, "\t\t%s - %s\n", EXIT_COMMAND, "Exit the filesystem CLI");
 }

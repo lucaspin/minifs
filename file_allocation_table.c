@@ -16,8 +16,13 @@
 
 void initialize_memory_bitmap() {
   int i = 0;
+  /* memory bitmap fill zero */
   for (; i < SECTOR_NUMBER; i++) {
     memory_bitmap[i] = 0;
+  }
+  /* reserving FAT space */
+  for (i = 0; i < RESERVED_BLOCK_NUMBER; i++) {
+    memory_bitmap[i] = 1;
   }
 }
 
@@ -37,7 +42,8 @@ directory* get_root_directory() {
 int get_directory(directory* current_dir, int* current_dir_initial_block, char* dir_name) {
   int i;
   for (i = 0; i < MAX_FILE_ENTRIES; i++) {
-    if (!strcmp(current_dir->entries[i].file_name, dir_name)) {
+    /* check file_name and if it is_directory */
+    if (!strcmp(current_dir->entries[i].file_name, dir_name) && current_dir->entries[i].is_directory == 1) {
       int next_dir_block = current_dir->entries[i].initial_block;
       get_directory_from_fat_by_id(next_dir_block, current_dir);
       *current_dir_initial_block = next_dir_block;
@@ -50,6 +56,47 @@ int get_directory(directory* current_dir, int* current_dir_initial_block, char* 
 void get_directory_from_fat_by_id(int initial_block_offset, directory *output_dir) {
   int offset = initial_block_offset * BLOCK_SIZE;
   memcpy((void*) output_dir, (void*) filesystem + offset, sizeof(directory));
+}
+
+int add_file(directory* current_dir, int current_dir_initial_block, char* new_file_name, int file_size) {
+  uint8_t free_slot;
+
+  if (get_duplicate_name_in_directory(current_dir, new_file_name)) {
+    printf("[ERROR] Duplicated name found %s\n", new_file_name);
+    return -1;
+  }
+
+  if ((free_slot = get_next_available_slot(current_dir)) == -1) {
+    fprintf(stderr, "%s\n", "No more slots available on directory!");
+    return -2;
+  }
+
+  /* Determining how many sectors do we need to save the file */
+  int sectors_needed = (file_size / BLOCK_SIZE);
+  if (file_size % BLOCK_SIZE) {sectors_needed++; }
+  printf("Sectors needed: %d\n", sectors_needed);
+
+  /* Disk space verification */
+  if (sectors_needed > get_total_free_space_in_sectors()) {
+    fprintf(stderr, "%s\n", "[ERROR] Cannot create file! Insufficient space in the filesystem!");
+    return -3;
+  }
+
+  // add file entry to parent directory and update it on fs
+  int index = get_first_fat_available();
+  file_entry* new_entry = make_file_entry(new_file_name, file_size, index, 0);
+  current_dir->entries[free_slot] = *new_entry;
+  memcpy((void*) filesystem + (current_dir_initial_block * BLOCK_SIZE), (void*) current_dir, BLOCK_SIZE);
+
+  //TODO: allocate entries in FAT (logically allocating the file)
+
+  //TODO: (BONUS, Optional) copy dummy file data into the filesystem
+  // create new directory structure on filesystem
+//  int offset = index * BLOCK_SIZE;
+//  directory* new_directory = malloc(sizeof(directory));
+//  memcpy((void*) filesystem + offset, (void*) new_directory, BLOCK_SIZE);
+//  memory_bitmap[index] = 1;
+  return 0;
 }
 
 int add_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name) {
@@ -85,7 +132,6 @@ int print_directory(directory* dir) {
   int total_number_dirs = 0;
 
   /* for each VALID file_entry in dir, print it */
-  fprintf(stdout, "Listing...\n\n");
   int i = 0;
   for (i = 0; i < MAX_FILE_ENTRIES; i++) {
     file_entry* fe = &dir->entries[i];
@@ -100,7 +146,7 @@ int print_directory(directory* dir) {
     }
   }
   fprintf(stdout,"\n \t\t\t %d File(s) \t \t \t %d bytes\n ", total_number_files, total_directory_size );
-  fprintf(stdout,"\t\t\t %d Dir(s) \t \t \t %d bytes free\n", total_number_dirs, get_total_free_space() );
+  fprintf(stdout,"\t\t\t %d Dir(s) \t \t \t %d bytes free\n", total_number_dirs, get_total_free_space_in_bytes() );
   return 0;
   }
 

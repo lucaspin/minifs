@@ -34,6 +34,7 @@ file_entry* make_file_entry(char* name, uint16_t file_size, int initial_block, i
   // TODO: make a name validation
   strncpy(entry->file_name, name, sizeof(&name));
   entry->is_directory = (uint8_t) is_directory;
+  entry->file_size = (uint16_t) file_size;
   entry->initial_block = (uint8_t) initial_block;
   entry->timestamp = (uint32_t) time(NULL);
   return entry;
@@ -49,7 +50,6 @@ void nullify_path_matrix(char matrix[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE
   }
 }
 
-//TODO: instantiate a directory
 int make_directory(char* path) {
   char parsed_path[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE];
   nullify_path_matrix(parsed_path);
@@ -76,6 +76,38 @@ int make_directory(char* path) {
   return 0;
 }
 
+int make_file(char* path, int file_size) {
+  char parsed_path[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE];
+  nullify_path_matrix(parsed_path);
+
+  int path_levels = parse_path(path, parsed_path);
+
+  if (path_levels > 0) {
+    int i = 0;
+    directory* current_directory = get_root_directory();
+    int current_directory_initial_block = 0;
+
+    /* path verification */
+    while (i < path_levels) {
+      if (i != (path_levels - 1) && get_directory(current_directory, &current_directory_initial_block, parsed_path[i])) {
+        fprintf(stderr, "[ERROR] Directory %s does not exist!\n", parsed_path[i]);
+        return -1;
+      }
+      i++;
+    }
+
+    /* if file cannot be added */
+    if(add_file(current_directory, current_directory_initial_block, parsed_path[i - 1], file_size) == 0) {
+      fprintf(stdout, "[DEBUG] Creating file %s with size %d\n", parsed_path[i - 1], file_size);
+    } else {
+      fprintf(stderr, "[ERROR] File %s cannot be created!\n", parsed_path[i - 1]);
+      return -3;
+    }
+  }
+
+  return 0;
+}
+
 int list_dir(char* path) {
   char parsed_path[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE];
   nullify_path_matrix(parsed_path);
@@ -96,6 +128,7 @@ int list_dir(char* path) {
       i++;
     }
 
+    fprintf(stdout, "Directory of ~/%s\n", path);
     print_directory(current_directory);
   }
 
@@ -129,8 +162,13 @@ int parse_path(char* path, char output_path_parsed[MAX_DIRECTORY_SUBLEVELS][MAX_
 }
 
 void print_file_entry(file_entry* fe) {
-  fprintf(stdout, "%s [isDir] %d %s \t [size] %u [name] %s \n",
-          timestamp_to_string(fe->timestamp), fe->is_directory, is_directory_to_string(fe->is_directory),fe->file_size, fe->file_name);
+  if (fe->is_directory) {
+    fprintf(stdout, "%s \t <DIR> \t \t \t %s \n",
+            timestamp_to_string(fe->timestamp), fe->file_name);
+  } else {
+    fprintf(stdout, "%s \t \t \t %u \t %s \n",
+            timestamp_to_string(fe->timestamp), fe->file_size, fe->file_name);
+  }
 }
 
 char* timestamp_to_string(uint32_t timestamp) {
@@ -140,15 +178,15 @@ char* timestamp_to_string(uint32_t timestamp) {
   return strtok(output_string, "\n");
 }
 
-//TODO: get free space (bytes) for listdir
-int get_total_free_space() {
-  return 42;
+int get_total_free_space_in_bytes() {
+  return get_total_free_space_in_sectors() * BLOCK_SIZE;
 }
 
-char* is_directory_to_string(int is_directory) {
-  if (is_directory == 1) {
-    return "<DIR>";
-  } else {
-    return "";
+//TODO:
+int get_total_free_space_in_sectors() {
+  int i, free_sector_count = 0;
+  for (i = 0; i < SECTOR_NUMBER; i++){
+    if (memory_bitmap[i] == 0) {free_sector_count++;}
   }
+  return free_sector_count;
 }
