@@ -46,6 +46,10 @@ int main() {
         fprintf(stdout, "%s\n", RMDIR_COMMAND);
         // TODO
         break;
+      case RMFILE:
+        fprintf(stdout, "%s\n", RMFILE_COMMAND);
+        // TODO
+        break;
       case LISTDIR:
         list_dir(action->path);
         break;
@@ -64,13 +68,8 @@ int main() {
       case HELP:
         show_help();
         break;
-      case CLEAR:
-        fprintf(stdout, "%s\n", CLEAR_COMMAND);
-        // TODO
-        break;
       case EXIT:
-        fprintf(stdout, "%s\n", EXIT_COMMAND);
-        fprintf(stdout, "%s\n", "Bye!\n");
+        fprintf(stdout, "%s\n", "Exiting file system...!\n");
         break;
     }
   } while (action->cmd != EXIT);

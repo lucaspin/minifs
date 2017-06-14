@@ -22,18 +22,17 @@
 #define MKDIR_COMMAND "mkdir"
 #define MKFILE_COMMAND "mkfile"
 #define RMDIR_COMMAND "rmdir"
+#define RMFILE_COMMAND "rmfile"
 #define LISTDIR_COMMAND "listdir"
 #define SHOWSEC_COMMAND "showsec"
 #define MAPSEC_COMMAND "mapsec"
 #define DIRTREE_COMMAND "dirtree"
 #define HELP_COMMAND "help"
-#define CLEAR_COMMAND "clear"
 #define EXIT_COMMAND "exit"
 #define COMMAND_DELIMITER " "
 
-// TODO: need to calculate this properly
-#define MAX_COMMAND_LENGTH 100
-#define MAX_PATH_LENGTH 72
+#define MAX_COMMAND_LENGTH 1024
+#define MAX_PATH_LENGTH 1024
 
 /////////////////////////////////////////////////////////////////////////////
 // Structures
@@ -43,12 +42,12 @@ typedef enum {
   MKDIR,
   MKFILE,
   RMDIR,
+  RMFILE,
   LISTDIR,
   SHOWSEC,
   MAPSEC,
   DIRTREE,
   HELP,
-  CLEAR,
   EXIT
 } command_type;
 

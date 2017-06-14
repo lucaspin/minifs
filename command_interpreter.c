@@ -109,6 +109,17 @@ int check_command(char* command, action_t* action) {
       fprintf(stderr, "\n%s\n", "[ERROR] You must specify a directory name!");
       return 0;
     }
+  } else if (!strcmp(command, RMFILE_COMMAND)) {
+    action->cmd = RMFILE;
+    action->file_size = 0;
+
+    char* filename = get_filename();
+    if (filename != NULL) {
+      strcpy(action->path, filename);
+    } else {
+      fprintf(stderr, "\n%s\n", "[ERROR] You must specify a file name!");
+      return 0;
+    }
   } else if (!strcmp(command, LISTDIR_COMMAND)) {
     action->cmd = LISTDIR;
     action->file_size = 0;
@@ -157,7 +168,8 @@ void show_help() {
   fprintf(stdout, "\t%s\n", "Commands:");
   fprintf(stdout, "\t\t%s %s - %s\n", MKDIR_COMMAND, "<path_name>", "Create a directory");
   fprintf(stdout, "\t\t%s %s - %s\n", MKFILE_COMMAND, "<path_name> <file_size>", "Create a file");
-  fprintf(stdout, "\t\t%s %s - %s\n", RMDIR_COMMAND, "<path_name>", "Remove a directory");
+  fprintf(stdout, "\t\t%s %s - %s\n", RMDIR_COMMAND, "<path_name>", "Remove a non-empty directory");
+  fprintf(stdout, "\t\t%s %s - %s\n", RMFILE_COMMAND, "<path_name>", "Remove a file");
   fprintf(stdout, "\t\t%s %s - %s\n", LISTDIR_COMMAND, "<path_name>", "List the contents of a directory");
   fprintf(stdout, "\t\t%s %s - %s\n", SHOWSEC_COMMAND, "<path_name>", "Show the sectors that a file occupies");
   fprintf(stdout, "\t\t%s - %s\n", MAPSEC_COMMAND, "Show the sector map for all the filesystem");
