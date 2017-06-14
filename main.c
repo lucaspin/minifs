@@ -58,8 +58,7 @@ int main() {
         // TODO
         break;
       case MAPSEC:
-        fprintf(stdout, "%s\n", MAPSEC_COMMAND);
-        // TODO
+        print_map_sec();
         break;
       case DIRTREE:
         fprintf(stdout, "%s\n", DIRTREE_COMMAND);

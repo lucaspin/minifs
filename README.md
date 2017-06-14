@@ -25,7 +25,7 @@ This is an educational project for the OS-II class on Sao Paulo State University
 
 [ ] `showsec` command to indicate which sectors are occupied by some file.
 
-[ ] `mapsec` command to show the free and occupied sectors of the disk
+[x] `mapsec` command to show the free and occupied sectors of the disk
 
 [ ] `dirtree` command to show the filesystem tree of directories
 

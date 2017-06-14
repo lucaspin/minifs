@@ -103,7 +103,7 @@ int allocate_n_fat_slots(int number_sector_to_allocate, int initial_fat_index);
 int get_first_fat_available();
 int set_entry_fat(int index, int lookup);
 int free_fat(int index);
-void print_fat();
+void print_map_sec();
 
 /**
  * get the next fat_index pointed by another

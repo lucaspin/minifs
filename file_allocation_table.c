@@ -251,6 +251,27 @@ int free_fat(int index) {
   exit(-1);
 }
 
+void print_map_sec() {
+  fprintf(stdout, "[DEBUG] FAT SECTOR MAP:\n");
+  int chunk_size = 32, chunk_counter = 0;
+  fprintf(stdout, "\t0\t: ");
+  for (int count = 0; count < SECTOR_NUMBER; count++) {
+    if (memory_bitmap[count] == 1) {
+      fprintf(stdout, "x");
+    } else {
+      fprintf(stdout, "-");
+    }
+    chunk_counter++;
+    /* tabulating the graph */
+    if (chunk_counter == chunk_size && !(count == SECTOR_NUMBER-1)) {
+        fprintf(stdout, "\n\t%d\t: ", count);
+        chunk_counter = 0;
+    }
+  }
+
+  fprintf(stdout, "\n[LEGEND] 'x': used sector, '-': free sector\n");
+}
+
 void print_fat() {
   fprintf(stdout, "[DEBUG] Printing fat allocated sector:\n");
   for (int count = 0; count < SECTOR_NUMBER; count++) {
