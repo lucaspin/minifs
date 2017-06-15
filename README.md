@@ -22,7 +22,7 @@ This is an educational project for the OS-II class on Sao Paulo State University
   * files must show size, time and creation date
   * In the end, it must appear: the total number of files and directories, the total size of files and directories and the amount of free disk space.
 
-[ ] `showsec` command to indicate which sectors are occupied by some file.
+[x] `showsec` command to indicate which sectors are occupied by some file.
 
 [x] `mapsec` command to show the free and occupied sectors of the disk
 

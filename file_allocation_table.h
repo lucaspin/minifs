@@ -89,7 +89,7 @@ uint8_t get_next_available_slot(directory* dir);
  *          name: the name for the query
  * @return  return 0 when not find duplicated names, or -1 otherwise
  */
-int get_duplicate_name_in_directory(directory* dir, char* name);
+int file_entry_exists_in_directory(directory *dir, char *name);
 
 /**
  * Allocate the n requested sectors in the fat
@@ -127,4 +127,8 @@ int is_valid_directory(file_entry* fe);
  * @return  return 0 when successful, -1 otherwise
  */
 int is_valid_file(file_entry* fe);
+
+int remove_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name);
+void empty_file_entry(file_entry* entry);
+int is_directory_empty(directory* dir);
 #endif

@@ -61,7 +61,7 @@ void get_directory_from_fat_by_id(int initial_block_offset, directory *output_di
 int add_file(directory* current_dir, int current_dir_initial_block, char* new_file_name, int file_size) {
   uint8_t free_slot;
 
-  if (get_duplicate_name_in_directory(current_dir, new_file_name)) {
+  if (file_entry_exists_in_directory(current_dir, new_file_name)) {
     printf("[ERROR] Duplicated name found %s\n", new_file_name);
     return -1;
   }
@@ -103,7 +103,7 @@ int add_file(directory* current_dir, int current_dir_initial_block, char* new_fi
 int add_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name) {
   uint8_t free_slot;
 
-  if (get_duplicate_name_in_directory(current_dir, new_dir_name)) {
+  if (file_entry_exists_in_directory(current_dir, new_dir_name)) {
     fprintf(stderr, "[ERROR] Duplicated name found %s\n", new_dir_name);
     return -1;
   }
@@ -170,7 +170,7 @@ uint8_t get_next_available_slot(directory* dir) {
   return (uint8_t) -1;
 }
 
-int get_duplicate_name_in_directory(directory* dir, char* name) {
+int file_entry_exists_in_directory(directory *dir, char *name) {
   for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
     if (!strcmp(dir->entries[i].file_name, name)) {
       return -1;
@@ -294,7 +294,7 @@ file_entry* get_file_entry_in_dir(directory* current_dir, char* file_name) {
   file_entry* temp_fe;
   for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
     temp_fe = &current_dir->entries[i];
-    if (is_valid_file(temp_fe)) {
+    if ( is_valid_file(temp_fe) || is_valid_directory(temp_fe) ) {
       /* match */
       if (!strcmp(temp_fe->file_name, file_name)) {
         return temp_fe;
@@ -318,4 +318,46 @@ int is_valid_file(file_entry* fe) {
   } else {
     return 0;
   }
+}
+
+int remove_directory(directory* current_dir, int current_dir_initial_block, char* new_dir_name) {
+
+  /* file_entry exists? */
+  if (!file_entry_exists_in_directory(current_dir, new_dir_name)) {
+    fprintf(stderr, "[ERROR] Directory %s not found! %s\n", new_dir_name);
+    return -1;
+  }
+
+  /* file_entry (dir) exists, checking for emptiness */
+  if (!is_directory_empty(current_dir)) {
+    fprintf(stderr, "[ERROR] Directory %s not empty! %s\n", new_dir_name);
+    return -2;
+  }
+
+  file_entry* fe_to_be_removed = get_file_entry_in_dir(current_dir, new_dir_name);
+
+  empty_file_entry(fe_to_be_removed);
+  memory_bitmap[fe_to_be_removed->initial_block] = 0;
+
+  // Update parent directory on fs
+  memcpy((void*) filesystem + (current_dir_initial_block * BLOCK_SIZE), (void*) current_dir, BLOCK_SIZE);
+  return 0;
+}
+
+void empty_file_entry(file_entry* entry) {
+  strcpy(entry->file_name, "");
+  entry->timestamp = 0;
+  entry->initial_block = 0;
+  entry->is_directory = 0;
+  entry->file_size = 0;
+}
+
+int is_directory_empty(directory* dir) {
+  for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
+    file_entry* fe = &dir->entries[i];
+    if (is_valid_directory(fe) || is_valid_file(fe)) {
+      return 1;
+    }
+  }
+  return 0;
 }

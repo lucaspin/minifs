@@ -43,8 +43,7 @@ int main() {
         make_file(action->path, action->file_size);
         break;
       case RMDIR:
-        fprintf(stdout, "%s\n", RMDIR_COMMAND);
-        // TODO
+        remove_directory_handler(action->path);
         break;
       case RMFILE:
         fprintf(stdout, "%s\n", RMFILE_COMMAND);
@@ -60,8 +59,7 @@ int main() {
         print_map_sec();
         break;
       case DIRTREE:
-        fprintf(stdout, "%s\n", DIRTREE_COMMAND);
-        // TODO
+        dirtree_handler();
         break;
       case HELP:
         show_help();

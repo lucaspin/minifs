@@ -97,4 +97,9 @@ int get_total_free_space_in_sectors();
 
 int print_sectors_used_by_file(char* path);
 
+void dirtree_handler();
+void dirtree(int dir_numbers, directory* current_dir, int current_dir_initial_block, char* current_dir_name);
+void print_dir(int indenting_level, char* dir_name);
+
+int remove_directory_handler(char *path);
 #endif

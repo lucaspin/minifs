@@ -233,3 +233,59 @@ int print_sectors_used_by_file(char* path) {
   return 0;
 
 }
+
+void dirtree_handler() {
+  dirtree(0, get_root_directory(), 0, "");
+}
+
+void dirtree(int dir_numbers, directory* current_dir, int current_dir_initial_block, char* current_dir_name) {
+  while (dir_numbers >= 0) {
+    print_dir(dir_numbers, current_dir_name);
+    for (int i = 0; i < MAX_FILE_ENTRIES; i++) {
+      if (is_valid_directory(&current_dir->entries[i])) {
+        dir_numbers++;
+        //directory* parent_dir = malloc(sizeof(directory));
+        get_directory(current_dir, &current_dir_initial_block, current_dir->entries[i].file_name);
+
+        dirtree(dir_numbers, current_dir, current_dir_initial_block, current_dir->entries[i].file_name);
+      }
+    }
+    dir_numbers--;
+  }
+}
+
+void print_dir(int indenting_level, char* dir_name) {
+  for (int i = 0; i < indenting_level; i++){
+    fprintf(stdout,"* ");
+  }
+  fprintf(stdout,"%s\n", dir_name);
+}
+
+int remove_directory_handler(char *path) {
+  char parsed_path[MAX_DIRECTORY_SUBLEVELS][MAX_FILE_NAME_SIZE];
+  nullify_path_matrix(parsed_path);
+
+  int path_levels = parse_path(path, parsed_path);
+
+  if (path_levels > 0) {
+    int i = 0;
+    directory* current_directory = get_root_directory();
+    int current_directory_initial_block = 0;
+
+    /* path verification */
+    while (i < path_levels) {
+      if (i != (path_levels - 1) && get_directory(current_directory, &current_directory_initial_block, parsed_path[i])) {
+        fprintf(stderr, "[ERROR] Directory %s does not exist!\n", parsed_path[i]);
+        return -1;
+      }
+      i++;
+    }
+
+    if (!remove_directory(current_directory, current_directory_initial_block, parsed_path[i - 1])) {
+
+    }
+
+  }
+
+  return 0;
+}
