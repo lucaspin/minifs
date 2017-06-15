@@ -12,7 +12,7 @@ This is an educational project for the OS-II class on Sao Paulo State University
 
 [x] Allow file creation inside the directories and sub-directories with the command `mkfile`. Each directory can contain several files. When creating a file, its size must be specified (size in bytes), and disk sectors must be allocated accordingly. File names must be unique inside a directory/sub-directory.
     
-[ ] Allow directory/sub-directory deletion with the command `rmdir`. Non-Empty directories can't be deleted.
+[x] Allow directory/sub-directory deletion with the command `rmdir`. Non-Empty directories can't be deleted.
 
 [ ] Allow file deletion with the command `rmfile`.
 
